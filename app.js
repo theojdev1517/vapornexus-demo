@@ -332,17 +332,17 @@
     if (!dom.statusBar) return;
 
     dom.statusBar.innerHTML = `
-      <div class="status-pill verified">
+      <div class="status-pill verified" title="ID Verified" aria-label="ID Verified">
         <span class="dot"></span>
-        ID Verified
+        ID
       </div>
-      <div class="status-pill verified">
+      <div class="status-pill verified" title="Face Match Verified" aria-label="Face Match Verified">
         <span class="dot"></span>
-        Face Match Verified
+        Face
       </div>
-      <div class="status-pill verified">
+      <div class="status-pill verified" title="21+ Confirmed" aria-label="21+ Confirmed">
         <span class="dot"></span>
-        21+ Confirmed
+        21+
       </div>
     `;
   }

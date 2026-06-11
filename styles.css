@@ -1059,6 +1059,148 @@ select.filter-select {
   }
 }
 
+/* Targeted mobile fixes for narrow phones (under 600px) */
+@media (max-width: 600px) {
+  /* Header: vertical mobile layout - no absolute, no edge touch, no horiz scroll */
+  .header {
+    display: grid;
+    grid-template-areas:
+      "brand cart"
+      "status status";
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    padding: 8px 14px; /* 14px side padding, nothing touches edges */
+    min-height: auto;
+    gap: 6px;
+    position: sticky; /* keep, but no abs */
+    top: 0;
+    z-index: 50;
+  }
+
+  .brand {
+    grid-area: brand;
+    font-size: 1.1rem;
+    gap: 8px;
+    /* logo left in its cell */
+  }
+
+  .status-bar {
+    grid-area: status;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 0;
+  }
+
+  .cart-btn {
+    grid-area: cart;
+    padding: 6px 10px;
+    font-size: 0.85rem;
+    min-height: 36px;
+    /* keep tappable, away from edge via header padding */
+  }
+
+  .status-pill {
+    font-size: 0.65rem;
+    padding: 3px 6px;
+    flex: 1 1 0;
+    min-width: 0;
+    justify-content: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .status-pill .dot {
+    width: 6px;
+    height: 6px;
+  }
+
+  /* Storefront mobile polish: one column cards, stacked filters, full width inputs, side padding */
+  .main {
+    padding: 14px; /* consistent 14px side padding */
+  }
+
+  .product-grid {
+    grid-template-columns: 1fr; /* stay one column on narrow phones */
+    gap: 12px;
+  }
+
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .filter-group {
+    width: 100%;
+  }
+
+  .search-input {
+    width: 100%;
+    min-width: 0;
+  }
+
+  select.filter-select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .price-range {
+    width: 100%;
+    gap: 6px;
+  }
+
+  .price-range input {
+    flex: 1;
+    min-width: 60px;
+    width: auto;
+  }
+
+  .filter-chips {
+    gap: 6px;
+  }
+
+  .chip {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    min-height: 36px;
+  }
+
+  /* Ensure no horizontal scrolling on page */
+  body,
+  .kiosk {
+    overflow-x: hidden;
+  }
+
+  /* Store header and other polish */
+  .store-header h2 {
+    font-size: 1.4rem;
+  }
+}
+
+/* Even tighter for 360px and below - stack price if needed */
+@media (max-width: 360px) {
+  .price-range {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+  }
+
+  .price-range input {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .price-range span {
+    display: none; /* hide the – on very narrow to save space; labels imply range */
+  }
+}
+
 /* High contrast focus for accessibility */
 button:focus-visible,
 input:focus-visible,
