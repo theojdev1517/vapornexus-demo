@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VaporNexus • Verified Vape Vending</title>
+  <meta name="description" content="VaporNexus – Interactive kiosk demo for age-verified vape vending. For demonstration and pitch purposes only.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="kiosk">
+
+    <!-- Persistent header (shown only after ID + Face verification) -->
+    <header id="header" class="header" style="display:none;">
+      <div class="brand">
+        <span class="brand-dot"></span>
+        <span>VaporNexus</span>
+      </div>
+
+      <!-- Verification status badges -->
+      <div id="status-bar" class="status-bar" aria-live="polite"></div>
+
+      <!-- Cart access -->
+      <button id="cart-btn" class="cart-btn" aria-label="View cart">
+        Cart
+      </button>
+    </header>
+
+    <main class="main">
+
+      <!-- ============================================ -->
+      <!-- 1. LANDING SCREEN -->
+      <!-- ============================================ -->
+      <section id="view-landing" class="view active landing" aria-labelledby="landing-title">
+        <div>
+          <h1 id="landing-title">VaporNexus</h1>
+          <p class="tagline">Verified vape vending for modern venues.</p>
+        </div>
+
+        <button id="start-id-btn" class="cta-btn" aria-describedby="age-notice">
+          Tap here to scan ID
+        </button>
+
+        <div id="age-notice" class="notice" role="note">
+          <strong>Demo only.</strong> No real purchases. 21+ age-restricted products.
+          This is a non-functional prototype for demonstration and pitch purposes.
+        </div>
+
+        <p style="font-size:0.8rem;color:var(--text-subtle);max-width:420px;">
+          Touch, click, or use keyboard. All data and transactions are simulated.
+        </p>
+      </section>
+
+      <!-- ============================================ -->
+      <!-- 2. SIMULATED ID SCAN -->
+      <!-- ============================================ -->
+      <section id="view-id-scan" class="view scan-container" aria-labelledby="id-title">
+        <h2 id="id-title" class="scan-title">ID Verification</h2>
+        <p class="scan-subtitle">Please place your government-issued photo ID on the scanner.</p>
+
+        <div id="id-scan-frame" class="scan-frame">
+          <span class="scan-icon" aria-hidden="true">🪪</span>
+          <div style="font-weight:600;margin-bottom:6px;">Scanning ID...</div>
+          <div style="color:var(--text-muted);font-size:0.9rem;">Align barcode or QR within the frame</div>
+
+          <!-- Progress -->
+          <div id="id-progress-container">
+            <div class="progress" aria-hidden="true">
+              <div id="id-progress-bar" class="progress-bar"></div>
+            </div>
+            <div style="font-size:0.8rem;color:var(--text-subtle);">Processing document security features</div>
+          </div>
+        </div>
+
+        <!-- Results injected here by JS -->
+        <div id="id-result" class="hidden" aria-live="polite"></div>
+
+        <div class="action-row">
+          <button id="continue-to-face-btn" class="btn btn-primary btn-large hidden">
+            Continue to Face Verification
+          </button>
+        </div>
+
+        <p style="margin-top:32px;font-size:0.75rem;color:var(--text-subtle);">
+          This is a simulation. No actual scanning hardware or data is used.
+        </p>
+      </section>
+
+      <!-- ============================================ -->
+      <!-- 3. SIMULATED FACE VERIFICATION -->
+      <!-- ============================================ -->
+      <section id="view-face-verify" class="view scan-container" aria-labelledby="face-title">
+        <h2 id="face-title" class="scan-title">Face Verification</h2>
+        <p class="scan-subtitle">Look at the camera. Keep your face centered in the frame.</p>
+
+        <div id="face-scan-frame" class="scan-frame">
+          <span class="scan-icon" aria-hidden="true">📷</span>
+          <div style="font-weight:600;margin-bottom:4px;">Camera Preview (simulated)</div>
+          <div style="color:var(--text-muted);font-size:0.9rem;">Position face within the oval</div>
+
+          <div id="face-progress-container">
+            <div class="progress" aria-hidden="true">
+              <div id="face-progress-bar" class="progress-bar"></div>
+            </div>
+            <div style="font-size:0.8rem;color:var(--text-subtle);">Analyzing facial landmarks • Liveness check</div>
+          </div>
+        </div>
+
+        <div id="face-result" class="hidden" aria-live="polite"></div>
+
+        <div class="action-row">
+          <button id="continue-to-store-btn" class="btn btn-primary btn-large hidden">
+            Enter Storefront
+          </button>
+        </div>
+
+        <p style="margin-top:24px;font-size:0.75rem;color:var(--text-subtle);">
+          No camera is accessed. This is a visual simulation only.
+        </p>
+      </section>
+
+      <!-- ============================================ -->
+      <!-- 4. STOREFRONT -->
+      <!-- ============================================ -->
+      <section id="view-storefront" class="view" aria-labelledby="store-title">
+        <div class="store-header">
+          <h2 id="store-title">Select Products</h2>
+          <div style="font-size:0.85rem;color:var(--text-muted);">21+ only • Age verification complete</div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters">
+          <!-- Search -->
+          <div class="filter-group" style="flex:1; min-width:220px;">
+            <label for="search-input">Search</label>
+            <input id="search-input" type="text" class="search-input" placeholder="Search name, brand, flavor..." aria-label="Search products">
+          </div>
+
+          <!-- Sort -->
+          <div class="filter-group">
+            <label for="sort-select">Sort</label>
+            <select id="sort-select" class="filter-select">
+              <option value="featured">Featured first</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+              <option value="name-az">Name A–Z</option>
+            </select>
+          </div>
+
+          <!-- Price range -->
+          <div class="filter-group">
+            <label>Price Range</label>
+            <div class="price-range">
+              <input id="price-min" type="number" step="0.01" min="0" placeholder="Min">
+              <span style="color:var(--text-subtle);">–</span>
+              <input id="price-max" type="number" step="0.01" min="0" placeholder="Max">
+            </div>
+          </div>
+
+          <button id="clear-filters-btn" class="btn" style="align-self:flex-end;min-height:48px;">Clear Filters</button>
+        </div>
+
+        <!-- Category chips -->
+        <div class="filter-group" style="margin-bottom:8px;">
+          <label>Category</label>
+          <div id="category-chips" class="filter-chips" role="group" aria-label="Filter by category"></div>
+        </div>
+
+        <!-- Nicotine strength chips -->
+        <div class="filter-group" style="margin-bottom:16px;">
+          <label>Nicotine Strength</label>
+          <div id="strength-chips" class="filter-chips" role="group" aria-label="Filter by nicotine strength"></div>
+        </div>
+
+        <!-- Products -->
+        <div id="product-grid" class="product-grid" aria-live="polite"></div>
+
+        <!-- Floating / prominent checkout when cart has items -->
+        <div style="margin-top: 24px; text-align: center;">
+          <button id="checkout-floating" class="btn btn-primary btn-large" style="display:none;">
+            Checkout
+          </button>
+          <div style="margin-top:12px;">
+            <button id="clear-cart-btn" class="btn btn-ghost" style="font-size:0.9rem;">Cancel session / clear cart</button>
+          </div>
+        </div>
+
+        <div class="compliance">
+          All products shown are for demonstration. 21+ age-restricted items. This is not a real store.
+        </div>
+      </section>
+
+      <!-- ============================================ -->
+      <!-- 5. SUCCESS / RECEIPT VIEW (also used for processing) -->
+      <!-- ============================================ -->
+      <section id="view-success" class="view" aria-labelledby="success-title">
+        <div class="success-screen">
+          <div class="success-icon" aria-hidden="true">✅</div>
+          <h2 id="success-title" class="success-title"></h2>
+
+          <p id="final-message" class="final-message"></p>
+
+          <!-- Receipt choice buttons injected by JS -->
+          <div id="receipt-options" class="receipt-options" role="group" aria-label="Receipt delivery options"></div>
+
+          <button id="start-new-btn" class="btn btn-primary btn-large" style="display:none;">
+            Start New Session
+          </button>
+
+          <div class="compliance" style="margin-top:40px;">
+            Thank you for trying the VaporNexus demo.
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- ============================================ -->
+  <!-- CART DRAWER (slide-in) -->
+  <!-- ============================================ -->
+  <div id="cart-drawer" class="cart-drawer" aria-hidden="true" role="dialog" aria-label="Shopping cart">
+    <div class="cart-header">
+      <span>Your Cart</span>
+      <button id="cart-close" class="cart-close" aria-label="Close cart">×</button>
+    </div>
+    <div id="cart-body" class="cart-body"></div>
+    <div class="cart-footer">
+      <div class="cart-subtotal">
+        <span>Subtotal</span>
+        <span id="cart-subtotal">$0.00</span>
+      </div>
+      <div class="cart-tax">
+        <span>Tax (OH State 5.75% + Cuyahoga County 2.25%)</span>
+        <span id="cart-tax">$0.00</span>
+      </div>
+      <div class="cart-total">
+        <span>Total</span>
+        <span id="cart-total">$0.00</span>
+      </div>
+      <div class="cart-actions">
+        <button id="cart-checkout-btn" class="btn btn-primary btn-large">Proceed to Checkout</button>
+        <button id="clear-cart-btn" class="btn">Clear Cart</button>
+      </div>
+      <div style="font-size:0.75rem;color:var(--text-subtle);margin-top:12px;text-align:center;">
+        Demo only — no real payment will be processed.
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- CHECKOUT MODAL -->
+  <!-- ============================================ -->
+  <div id="checkout-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="checkout-title">
+    <div class="modal-content" style="max-width:680px; text-align:left;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <h3 id="checkout-title" style="margin:0;">Checkout</h3>
+        <button id="checkout-close" class="cart-close" style="font-size:1.8rem;">×</button>
+      </div>
+
+      <div class="warning-box">
+        <strong>Demo payment only.</strong><br>
+        Enter <strong>1234</strong> as the card number to simulate approval.<br>
+        Any other number will show a friendly demo decline.<br>
+        This demo will not accept or store real card numbers.
+      </div>
+
+      <div class="checkout-grid">
+        <!-- Order Summary -->
+        <div>
+          <div class="order-summary">
+            <h4>Order Summary</h4>
+            <div id="order-summary"></div>
+          </div>
+        </div>
+
+        <!-- Customer + Payment Form -->
+        <div>
+          <form id="checkout-form" novalidate>
+            <div class="form-group">
+              <label for="cust-name">Full Name</label>
+              <input id="cust-name" type="text" required placeholder="Alex Rivera" autocomplete="name">
+              <div class="field-error" id="cust-name-error" aria-live="polite"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="cust-email">Email Address</label>
+              <input id="cust-email" type="email" placeholder="you@example.com" autocomplete="email">
+              <div class="field-error" id="cust-email-error" aria-live="polite"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="cust-phone">Phone Number</label>
+              <input id="cust-phone" type="tel" placeholder="(555) 123-4567" autocomplete="tel">
+              <div class="field-error" id="cust-phone-error" aria-live="polite"></div>
+            </div>
+
+            <div class="form-group full">
+              <label for="card-number">Card Number (demo)</label>
+              <input id="card-number" type="text" inputmode="numeric" maxlength="4" placeholder="1234" required style="font-size:1.3rem; letter-spacing:6px;">
+              <div style="font-size:0.75rem;color:var(--text-subtle);margin-top:4px;">Maximum 4 digits for this demo. Use 1234 for success.</div>
+              <div class="field-error" id="card-number-error" aria-live="polite"></div>
+            </div>
+
+            <div class="checkout-grid" style="grid-template-columns:1fr 1fr; gap:12px;">
+              <div class="form-group">
+                <label for="card-exp">Expiration</label>
+                <input id="card-exp" type="text" placeholder="MM/YY" maxlength="5">
+                <div class="field-error" id="card-exp-error" aria-live="polite"></div>
+              </div>
+              <div class="form-group">
+                <label for="card-cvv">CVV</label>
+                <input id="card-cvv" type="text" placeholder="123" maxlength="4">
+                <div class="field-error" id="card-cvv-error" aria-live="polite"></div>
+              </div>
+            </div>
+
+            <div id="payment-error" style="color:var(--danger);font-size:0.9rem;margin-top:4px;display:none;"></div>
+
+            <button id="pay-btn" type="submit" class="btn btn-primary btn-large" style="width:100%; margin-top:16px;">
+              Pay &amp; Complete Order
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div style="margin-top:20px;font-size:0.72rem;color:var(--text-subtle);text-align:center;">
+        No sensitive data is collected, stored, or transmitted. This is a simulated transaction.
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- IDLE TIMEOUT WARNING MODAL -->
+  <!-- ============================================ -->
+  <div id="idle-modal" class="modal" role="alertdialog" aria-modal="true" aria-labelledby="idle-title">
+    <div class="modal-content">
+      <h3 id="idle-title">Are you still there?</h3>
+      <p style="color:var(--text-muted);">
+        Your session has been inactive for a while.<br>
+        Would you like to continue or end this demo session?
+      </p>
+      <div class="modal-actions">
+        <button id="idle-continue-btn" class="btn btn-primary">Continue Session</button>
+        <button id="idle-end-btn" class="btn btn-danger">End Session</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="app.js"></script>
+</body>
+</html>
